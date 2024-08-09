@@ -1,0 +1,22 @@
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.post('/select-ivr-option', (req, res) => {
+    const { ivrOptions, keywords } = req.body;
+    let selectedOption = null;
+
+    for (let option of ivrOptions) {
+        for (let keyword of keywords) {
+            if (option.toLowerCase().includes(keyword.toLowerCase())) {
+                selectedOption = option.match(/\d+/)[0];  // Extract the digit from the option
+                break;
+            }
+        }
+        if (selectedOption) break;
+    }
+
+    res.json({ selectedOption: selectedOption || '0' });  // Default to '0' if no match found
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
